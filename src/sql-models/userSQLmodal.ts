@@ -28,5 +28,10 @@ export const sqlUserModal={
         console.log(values)
         await pool.query(`update users set ${fields.join(",")} where id=?`,[...values,id])
         
+    },
+    async deleteUser(id:number){
+
+       await pool.query("delete from users where  id=?",[id])
+      
     }
 }

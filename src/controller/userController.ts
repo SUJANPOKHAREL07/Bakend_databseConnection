@@ -25,3 +25,10 @@ export const updateUserController=async(req:Request,res:Response)=>{
     res.status(200).json(data)
 
 }
+export const deleteUserController=async(req:Request,res:Response)=>{
+const id=Number(req.params.id)
+console.log(id)
+await sqlUserModal.deleteUser(id)
+res.status(200).json({message:"Deletd Successfuly"})
+
+}
