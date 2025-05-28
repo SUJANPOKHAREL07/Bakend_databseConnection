@@ -12,4 +12,21 @@ export const sqlUserModal={
         const data=await pool.query("insert into users (name,email) values (?,?)",[user.name,user.email])
         
     },
+    async UpdateUser(id:number,user:Partial<{name:string,email:string}>){
+        const fields=[]
+        const values=[]
+
+        if(user.name !== undefined){
+            fields.push("name=?")
+            values.push(user.name)
+        }
+        if(user.email !== undefined){
+            fields.push("email=?")
+            values.push(user.email)
+        }
+        if(fields.length==0) return undefined
+        console.log(values)
+        await pool.query(`update users set ${fields.join(",")} where id=?`,[...values,id])
+        
+    }
 }

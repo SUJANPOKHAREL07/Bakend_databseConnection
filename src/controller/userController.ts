@@ -16,3 +16,12 @@ export const createUsersController=async(req:Request,res:Response)=>{
     const data=await sqlUserModal.createUser({name,email})
     res.status(200).json(data)
 }
+
+export const updateUserController=async(req:Request,res:Response)=>{
+    const id=Number(req.params.id);
+    const {name,email}=req.body
+    
+    const data=await sqlUserModal.UpdateUser(id,{name,email})
+    res.status(200).json(data)
+
+}
