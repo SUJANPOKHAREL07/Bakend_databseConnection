@@ -9,7 +9,7 @@ const PORT=3000
 
 app.use("/product",productRouter)
 app.use("/category",categoryRouter)
-app.use("/user",userRouter)
+app.use("/users",userRouter)
 
 app.listen(PORT ,()=>{
     console.log("you are in server Port no:",PORT)
