@@ -10,3 +10,9 @@ export const getUserByIdController=async(req:Request,res:Response)=>{
     const fromid=await sqlUserModal.getUserBYId(id)
     res.status(200).json(fromid)
 }
+
+export const createUsersController=async(req:Request,res:Response)=>{
+    const{name,email}=req.body;
+    const data=await sqlUserModal.createUser({name,email})
+    res.status(200).json(data)
+}

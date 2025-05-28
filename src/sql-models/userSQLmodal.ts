@@ -8,5 +8,8 @@ export const sqlUserModal={
         const [userData]=await pool.query("select * from users where id=?",[id])
         return userData
     },
-   
+    async createUser(user:{name:string,email:string}){
+        const data=await pool.query("insert into users (name,email) values (?,?)",[user.name,user.email])
+        
+    },
 }
