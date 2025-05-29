@@ -4,6 +4,10 @@ export const sqlOrderModal={
        
         const [orderData]= await pool.query("select * from orders")
         return orderData
+    },
+    async getOrderById(id:number){
+      const [orderData]=  await pool.query("select * from orders where id =?",[id])
+        return orderData
     }
 
 }
