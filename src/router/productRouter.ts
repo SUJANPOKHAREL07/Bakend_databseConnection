@@ -13,4 +13,4 @@ productRouter.put("/:id",updateProductController)
 productRouter.delete("/:id",deleteProduct)
 export default productRouter
 
-// Category Router
+
