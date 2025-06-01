@@ -1,32 +1,46 @@
 
+
 import pool from "./mysql-client";
 import { sqlProductModal } from "./productSQLmodal";
 
 
 export const sqlOrderModal = {
-  async createOrder( order: { id: number; productId: number[] }) {
-    const conn = await pool.getConnection();
+ 
+  async createOrder(order:{userId:number,productId:number[]}){
 
-    try {
-      await conn.beginTransaction();
-      const productName = await sqlProductModal.getById(order.id);
-      
+    const conn =await pool.getConnection()
+    try{
+
+await conn.beginTransaction();
+
+
       const [result]: any = await conn.query(
-        "insert into orders (userId) values (?)",
-        [order.id]
+        "INSERT INTO orders (userId) VALUES (?)",
+        [order.userId]
       );
-      const orderid = result;
+      const orderId = result.insertId;
       for (const pid of order.productId) {
         await conn.query(
-          "insert into orders (orderid,productid) where orderid(?,?)",
-          [orderid, pid]
+          "INSERT INTO order_products (orderid, productId) VALUES (?, ?)",
+          [orderId, pid]
         );
       }
-    } catch (err) {
-      conn.rollback();
+      await conn.commit();
+      return {
+        id: orderId,
+        userId: order.userId,
+        productId: order.productId,
+      };
+    }catch(err){
+        await conn.rollback();
       throw err;
-    } finally {
-      conn.release();
+    }
+    finally{
+      conn.release()
     }
   },
+ 
+  async getAllOrdder(){
+
+  }
 };

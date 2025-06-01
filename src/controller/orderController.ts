@@ -7,7 +7,7 @@ function validateOrderInput(body: any) {
   if (typeof body.userId !== "number") {
     return "userId must be a number";
   }
-  if (!Array.isArray(body.productIds) || body.productIds.length === 0) {
+  if (!Array.isArray(body.productId) || body.productId.length === 0) {
     return "productIds must be a non-empty array";
   }
   // Check if user exists
@@ -15,7 +15,7 @@ function validateOrderInput(body: any) {
     return "User does not exist";
   }
   // Check if all products exist
-  for (const pid of body.productIds) {
+  for (const pid of body.productId) {
     if (!sqlProductModal.getById(pid)) {
       return `Product with id ${pid} does not exist`;
     }
@@ -35,6 +35,7 @@ export const createOrder = (
   }
   try {
     const order = sqlOrderModal.createOrder(req.body);
+    console.log(order)
     res.status(201).json(order);
   } catch (err) {
     next(err);
