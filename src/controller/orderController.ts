@@ -1,31 +1,44 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { sqlOrderModal } from "../sql-models/orderSQLmodals";
+import { sqlProductModal } from "../sql-models/productSQLmodal";
+import { sqlUserModal } from "../sql-models/userSQLmodal";
 
-export const getAllorderController = async (req: Request, res: Response) => {
-  const dataOrder = await sqlOrderModal.getAllOrder();
-  res.status(200).json(dataOrder);
-};
-export const getOrderByIdController=async(req:Request,res:Response)=>{
-    const id=Number(req.params.id)
-    const dataOrder=await sqlOrderModal.getOrderById(id)
-    res.status(200).json(dataOrder)
-}
-export const createOrderController=async(req:Request,res:Response)=>{
-      let { userid } = req.body;
-
-  // Convert string to number safely
-  userid = Number(userid);
-
-  if (!userid || isNaN(userid)) {
-    return res.status(400).json({ error: "Invalid or missing userid" });
+function validateOrderInput(body: any) {
+  if (typeof body.userId !== "number") {
+    return "userId must be a number";
   }
+  if (!Array.isArray(body.productIds) || body.productIds.length === 0) {
+    return "productIds must be a non-empty array";
+  }
+  // Check if user exists
+  if (!sqlUserModal.getUserBYId(body.userId)) {
+    return "User does not exist";
+  }
+  // Check if all products exist
+  for (const pid of body.productIds) {
+    if (!sqlProductModal.getById(pid)) {
+      return `Product with id ${pid} does not exist`;
+    }
+  }
+  return null;
+}
 
+export const createOrder = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const error = validateOrderInput(req.body);
+  if (error) {
+    res.status(400).json({ message: error });
+    return;
+  }
   try {
-    const dataOrder = await sqlOrderModal.createOrder(userid);
-    console.log("Inserted userId:", userid);
-    res.status(200).json({ success: true, data: dataOrder });
-  } catch (error) {
-    console.error("Error inserting order:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    const order = sqlOrderModal.createOrder(req.body);
+    res.status(201).json(order);
+  } catch (err) {
+    next(err);
   }
-}
+};
+
+
