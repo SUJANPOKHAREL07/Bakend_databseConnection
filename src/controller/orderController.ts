@@ -52,5 +52,14 @@ console.log("this is the data:",allData)
 }
   
 }
-
+export const getOrderByIDController=async(req:Request,res:Response)=>{
+ try{
+ const orderID=Number(req.params.id);
+ const idorder=await sqlOrderModal.getOrderByID(orderID)
+  res.status(200).json(idorder)
+ }
+ catch{
+  res.status(404).json({error:"unabole to find the order requested"})
+ }
+}
 

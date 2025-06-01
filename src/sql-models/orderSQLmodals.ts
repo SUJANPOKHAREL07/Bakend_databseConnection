@@ -45,5 +45,9 @@ await conn.beginTransaction();
 
     console.log(orderData)
   return orderData
+  },
+  async getOrderByID(id:number){
+    const orderIddata=await pool.query("select * from order_products where orderId=?",[id])
+    return orderIddata
   }
 };
