@@ -41,5 +41,16 @@ export const createOrder = (
     next(err);
   }
 };
+export const getAllorderController=async(req:Request,res:Response)=>{
+try{
+const allData=  await sqlOrderModal.getAllOrdder()
+console.log("this is the data:",allData)
+    
+  res.status(200).json(allData)
+}catch{
+  res.status(404).json({error:"cannot fetch the data"})
+}
+  
+}
 
 

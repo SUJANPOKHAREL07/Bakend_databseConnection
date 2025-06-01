@@ -41,6 +41,9 @@ await conn.beginTransaction();
   },
  
   async getAllOrdder(){
+   const orderData= await pool.query("select * from order_products")
 
+    console.log(orderData)
+  return orderData
   }
 };
