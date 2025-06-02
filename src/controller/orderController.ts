@@ -62,4 +62,19 @@ export const getOrderByIDController=async(req:Request,res:Response)=>{
   res.status(404).json({error:"unabole to find the order requested"})
  }
 }
+export const updateOrderController=async(req:Request,res:Response)=>{
+  const orderid=Number(req.params.id);
+  console.log("this is orderid",orderid)
+  const productId=req.body;
+  console.log("this is productid",productId)
+  const updated=await sqlOrderModal.updateOrder(orderid,productId)
+  console.log(updated)
+  res.status(200).json(updated)
+}
 
+export const deleteOrderByController=async(req:Request,res:Response)=>{
+  const id=Number(req.params.id)
+  const oreder=await sqlOrderModal.deleteOrder(id)
+res.status(200).json(oreder)
+
+}
