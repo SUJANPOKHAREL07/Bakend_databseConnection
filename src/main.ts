@@ -4,6 +4,9 @@ import productRouter from "./router/productRouter"
 import categoryRouter from "./router/categoryRouter"
 import userRouter from "./router/userRouter"
 import orderRouter from "./router/orderRouter"
+import dotenv from 'dotenv'
+
+dotenv.config();
 const app=express()
 app.use(express.json())
 const PORT=3000
