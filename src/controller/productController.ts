@@ -4,10 +4,12 @@ import { Request,Response } from "express";
 import { productModal } from "../modal/productModal";
 import { sqlProductModal } from "../sql-models/productSQLmodal";
 import { error } from "console";
+import {  creatProductsService, deleteProductService, getAllProductsService, getProdcutsByIDService, updateProductService } from "../MongoDBModule/productModal/productService";
+
 
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const products = await sqlProductModal.getAll();
+        const products = await getAllProductsService();
         res.json(products);
     } catch (error) {
         res.status(500).json({ error: "Error fetching products" });
@@ -15,8 +17,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
 };
 export const getProductsById = async (req: Request, res: Response) => {
     try {
-        const id=Number(req.params.id)
-        const products = await sqlProductModal.getById(id);
+       
+        const products = await getProdcutsByIDService(req.params.id);
        console.log(products)
         res.json(products);
     } catch (error) {
@@ -24,9 +26,14 @@ export const getProductsById = async (req: Request, res: Response) => {
     }
 };
 export const createProduct=async(req:Request,res:Response)=>{
-   const{name,price,categoryid}=req.body;
-   const newProduct=await sqlProductModal.createProductSQL({name,price,categoryid})
+try{
+    const{name,price,categoryID}=req.body
+   const newProduct=await creatProductsService(name,price,categoryID)
+   console.log(newProduct)
    res.json(newProduct)
+}catch(error){
+  res.status(404).json({error:"unable to create products"})
+}
  
 }
 // export const updateProduct=async (req:Request,res:Response)=>{
@@ -46,16 +53,14 @@ export const createProduct=async(req:Request,res:Response)=>{
 //     res.status(202).json(updated)
 //}
 export const updateProductController = async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
-  const { name, price, categoryId } = req.body;
+  const id = Number(req.params.id);
+  // const { name, price, categoryID } = req.body;
 
   try {
-    const updatedProduct = await sqlProductModal.Updated(id, {
-      name,
-      price,
-      categoryId,
-    });
-    res.status(200).json(updatedProduct);
+    const productid = await updateProductService(req.body);
+
+    // const newUpdatedData={...product,...req.body}
+    // res.status(200).json(newUpdatedData);
   } catch (error: any) {
     console.error("Update error:", error.message || error);
     res.status(500).json({ error: error.message || "Internal Server Error" });
@@ -63,8 +68,7 @@ export const updateProductController = async (req: Request, res: Response) => {
  
 };
  export const deleteProduct=async(req:Request,res:Response)=>{
-    const id=Number(req.params.id)
-    await sqlProductModal.deleteProduct(id)
+    // const id=Number(req.params.id)
+    await deleteProductService(req.params.id)
     res.status(200).json({message:"Deleted"})
-
   }
