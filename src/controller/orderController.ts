@@ -2,10 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { sqlOrderModal } from "../sql-models/orderSQLmodals";
 import { sqlProductModal } from "../sql-models/productSQLmodal";
 import { sqlUserModal } from "../sql-models/userSQLmodal";
+import { createOrderService, getAllOrderService, getOrderByIdService,deleteOrderService } from "../MongoDBModule/orderModal/orderService";
 
 function validateOrderInput(body: any) {
-  if (typeof body.userId !== "number") {
-    return "userId must be a number";
+  if (typeof body.userId !== "string") {
+    return "userId must be a String";
   }
   if (!Array.isArray(body.productId) || body.productId.length === 0) {
     return "productIds must be a non-empty array";
@@ -23,7 +24,7 @@ function validateOrderInput(body: any) {
   return null;
 }
 
-export const createOrder = (
+export const createOrder =async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -34,16 +35,20 @@ export const createOrder = (
     return;
   }
   try {
-    const order = sqlOrderModal.createOrder(req.body);
+    // const order = sqlOrderModal.createOrder(req.body);
+    const{userId,productId,quantity}=req.body
+        const order =await createOrderService(userId,productId,quantity);
+
     console.log(order)
     res.status(201).json(order);
   } catch (err) {
+    console.log("Unable to create order")
     next(err);
   }
 };
 export const getAllorderController=async(req:Request,res:Response)=>{
 try{
-const allData=  await sqlOrderModal.getAllOrdder()
+const allData=  await getAllOrderService()
 console.log("this is the data:",allData)
     
   res.status(200).json(allData)
@@ -54,8 +59,8 @@ console.log("this is the data:",allData)
 }
 export const getOrderByIDController=async(req:Request,res:Response)=>{
  try{
- const orderID=Number(req.params.id);
- const idorder=await sqlOrderModal.getOrderByID(orderID)
+//  const orderID=Number(req.params.id);
+ const idorder=await getOrderByIdService(req.params.id)
   res.status(200).json(idorder)
  }
  catch{
@@ -73,8 +78,15 @@ export const updateOrderController=async(req:Request,res:Response)=>{
 }
 
 export const deleteOrderByController=async(req:Request,res:Response)=>{
-  const id=Number(req.params.id)
-  const oreder=await sqlOrderModal.deleteOrder(id)
-res.status(200).json(oreder)
+  // const id=Number(req.params.id)
+   const datatTobeDeleted= await getOrderByIdService(req.params.id)
+  res.json(datatTobeDeleted)
+   try{ 
+ const data= await deleteOrderService(req.params.id)
+ console.log(data)
+res.status(200).json("Deleted the data")}
+catch{
+  res.status(404).json("unable to delete order data")
+}
 
 }
