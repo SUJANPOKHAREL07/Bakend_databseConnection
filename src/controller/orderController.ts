@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { sqlOrderModal } from "../sql-models/orderSQLmodals";
 import { sqlProductModal } from "../sql-models/productSQLmodal";
 import { sqlUserModal } from "../sql-models/userSQLmodal";
-import { createOrderService, getAllOrderService, getOrderByIdService,deleteOrderService } from "../MongoDBModule/orderModal/orderService";
+import { createOrderService, getAllOrderService, getOrderByIdService,deleteOrderService, updateOrderService } from "../MongoDBModule/orderModal/orderService";
 
 function validateOrderInput(body: any) {
   if (typeof body.userId !== "string") {
@@ -68,13 +68,16 @@ export const getOrderByIDController=async(req:Request,res:Response)=>{
  }
 }
 export const updateOrderController=async(req:Request,res:Response)=>{
-  const orderid=Number(req.params.id);
-  console.log("this is orderid",orderid)
-  const productId=req.body;
+ try{ const id=req.params.id;
+  console.log("this is orderid",id)
+  const {productId,quantity,userId}=req.body;
   console.log("this is productid",productId)
-  const updated=await sqlOrderModal.updateOrder(orderid,productId)
+  const updated=await updateOrderService(id,req.body)
   console.log(updated)
-  res.status(200).json(updated)
+  res.status(200).json(updated)}
+  catch{
+  res.status(404).json("unable to connect")
+  }
 }
 
 export const deleteOrderByController=async(req:Request,res:Response)=>{

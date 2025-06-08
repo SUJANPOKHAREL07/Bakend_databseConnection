@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import { sqlUserModal } from "../sql-models/userSQLmodal";
-import { CreateUserService, deleteUserService, getAllUsersService, getusersByIDService } from "../MongoDBModule/usersModal/userService";
+import { CreateUserService, deleteUserService, getAllUsersService, getusersByIDService, updateUserService } from "../MongoDBModule/usersModal/userService";
 
 export const getUserController=async(req:Request,res:Response)=>{
     res.status(200).json(await getAllUsersService())
@@ -27,10 +27,10 @@ export const createUsersController=async(req:Request,res:Response)=>{
 }
 
 export const updateUserController=async(req:Request,res:Response)=>{
-    const id=Number(req.params.id);
-    const {name,email}=req.body
+    const id=req.params.id;
+    const {name,email,password}=req.body
     
-    const data=await sqlUserModal.UpdateUser(id,{name,email})
+    const data=await updateUserService({id,name,email,password})
     res.status(200).json(data)
 
 }

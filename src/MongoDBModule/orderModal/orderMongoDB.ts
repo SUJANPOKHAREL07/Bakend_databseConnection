@@ -1,9 +1,15 @@
-import  { Schema } from "mongoose";
+import  { Schema,Types } from "mongoose";
 import mongoose from "../mogodbClient";
 
-const orderSchema=new Schema({
-userId:{type:mongoose.Types.ObjectId,ref:"Users",required:true},
-productId:{type:mongoose.Types.ObjectId,ref:"Product",required:true},
+export interface IOrder extends Document {
+  userId: Types.ObjectId;
+  productId: Types.ObjectId[];
+  quantity:Number,
+  orderDate: Date;
+}
+const orderSchema=new Schema<IOrder>({
+userId:{type:Schema.Types.ObjectId,ref:"Users",required:true},
+productId:[{type:Schema.Types.ObjectId,ref:"Product",required:true}],
 quantity:{type:Number,required:true},
 orderDate:{type:Date, default:Date.now,required:true}
 })

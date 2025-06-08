@@ -53,14 +53,16 @@ try{
 //     res.status(202).json(updated)
 //}
 export const updateProductController = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  // const { name, price, categoryID } = req.body;
+  const id = req.params.id;
+  const { name, price, categoryID } = req.body;
 
   try {
-    const productid = await updateProductService(req.body);
-
+    const productid = await updateProductService({id:id,name,price,categoryID});
+    const newUpdatedData=await getProdcutsByIDService(id)
+    res.json(newUpdatedData)
     // const newUpdatedData={...product,...req.body}
     // res.status(200).json(newUpdatedData);
+    console.log(productid)
   } catch (error: any) {
     console.error("Update error:", error.message || error);
     res.status(500).json({ error: error.message || "Internal Server Error" });

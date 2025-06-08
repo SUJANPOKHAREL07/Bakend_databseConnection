@@ -1,3 +1,4 @@
+import { idText } from "typescript";
 import Category from "./categoryMongoDB";
 
 async function createCategoryService(name: string) {
@@ -12,9 +13,13 @@ async function getCategoryByIdSevice(id:String){
   return getBYID
 }
 async function updateCategoryService(data:{id:number,name:string}){
-  const updateData= await Category.updateOne(
+  const updateFields:any={}
+  if(data.name!==undefined) updateFields.name=data.name
+  const updateData= await Category.findByIdAndUpdate(
     {_id:data.id},
-  { $set:{name:data.name}}
+  { $set:updateFields},{
+    new:true
+  }
   )
   console.log("update service ",updateData)
   return updateData

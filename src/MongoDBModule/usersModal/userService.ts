@@ -18,4 +18,16 @@ async function deleteUserService(id:string){
     return await userModal.deleteOne({_id:id})
     
 }
-export {CreateUserService,getAllUsersService,getusersByIDService,deleteUserService}
+async function updateUserService(data:{id:string,name:string,email:string,password:string}){
+    const updateFields:any={}
+    if(data.name!==undefined) updateFields.name=data.name
+    if(data.email!==undefined) updateFields.email=data.email
+    if(data.password!==undefined) updateFields.password=data.password
+
+    return await userModal.findByIdAndUpdate(
+        {_id:data.id},
+      {  $set:updateFields},
+      {new:true}
+    )
+}
+export {CreateUserService,getAllUsersService,getusersByIDService,deleteUserService,updateUserService}

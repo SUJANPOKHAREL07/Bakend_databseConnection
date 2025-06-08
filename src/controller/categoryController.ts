@@ -1,6 +1,7 @@
 import { Request,Response } from "express";
 import { sqlCategoryModal } from "../sql-models/categorySQLmodal";
 import { createCategoryService, deleteCategoryService, getAllCategoryService, getCategoryByIdSevice, updateCategoryService } from "../MongoDBModule/category/categoryService";
+import { log } from "console";
 export const getAllCategoryController=async(req:Request,res:Response)=>{
     try{
         const categories=await getAllCategoryService()
@@ -32,15 +33,22 @@ export const createCategory=async(req:Request,res:Response)=>{
     }
 }
 export const updateCategoryController=async(req:Request,res:Response)=>{
-    const id = Number(req.params.id);
     // const{name,productId}=req.body;
-    const updateCategory=await updateCategoryService(req.body)
+    
+    try{
+        const id = req.params.id;
+       const {name}=req.body
+     const updateCategory=await updateCategoryService({id,name})
     console.log("this is updateController",updateCategory)
       if (!updateCategory) {
     res.status(404).json({ message: "Category not found" });
     return;
   }
     res.status(200).json(updateCategory)
+   }
+   catch{
+    res.json("unaable to update")
+   }
 }
 export const deleteCategoryController=async(req:Request,res:Response)=>{
    

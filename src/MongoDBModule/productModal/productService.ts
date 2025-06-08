@@ -22,11 +22,19 @@ async function getProdcutsByIDService(id: string) {
   return getProductID;
 }
 async function updateProductService(data:{id:string,name:string,price:Number,categoryID:string}){
-    const updateProduct= await productModal.updateOne({
-        _id:data.id,
-        $set :{name: data.name,price:data.price,categoryID:data.categoryID}
-    })
-    return updateProduct
+   const updateFields: any = {};
+
+  if (data.name !== undefined) updateFields.name = data.name;
+  if (data.price !== undefined) updateFields.price = data.price;
+  if (data.categoryID !== undefined) updateFields.categoryID = data.categoryID;
+
+  
+  return await productModal.findByIdAndUpdate(
+      {_id:data.id},
+       { $set :updateFields },
+        {new:true}
+    )
+    
 }
 async function deleteProductService(id:string) {
     const deleteData= await productModal.deleteOne({_id:id})

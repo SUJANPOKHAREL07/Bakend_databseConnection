@@ -1,11 +1,17 @@
-import { Schema } from "mongoose";
+import { Schema,Types,Document } from "mongoose";
 import mongoose from "../mogodbClient";
 
-const productSchema=new Schema({
-    name:{type:String,require:true},
-    price:{type:Number,require:true},
-    categoryID:{type:mongoose.Types.ObjectId,ref:"Category",require:true}
+export interface Iproduct extends Document{
+  name:string,
+  price:Number,
+  categoryID:Types.ObjectId
+}
+const productSchema=new Schema<Iproduct>({
+    name:{type:String,required:true},
+    price:{type:Number,required:true},
+    categoryID:{type:Schema.Types.ObjectId,ref:"Category",required:true}
 })
 const productModal=mongoose.model("Product",productSchema)
 
 export default productModal
+
