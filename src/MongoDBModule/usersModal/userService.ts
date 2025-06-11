@@ -30,4 +30,9 @@ async function updateUserService(data:{id:string,name:string,email:string,passwo
       {new:true}
     )
 }
-export {CreateUserService,getAllUsersService,getusersByIDService,deleteUserService,updateUserService}
+async function checkUserCredentials(name:string,password:string){
+     await userModal.findOne({name,password})
+   
+}
+
+export {CreateUserService,getAllUsersService,getusersByIDService,deleteUserService,updateUserService,checkUserCredentials}
