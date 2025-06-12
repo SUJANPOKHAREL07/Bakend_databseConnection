@@ -1,17 +1,19 @@
 import userModal from "../usersModal/userMongoDB";
 import userLogin from "./loginMongoDB";
 
-async function storeLoginDetailsService(name:string,password:string){
-  const login=new userLogin({
-    name:name,
-    passwowrd:password
-  })
-  return await login.save()
+async function storeLoginDetailsService(email: string, password: string) {
+  const login = new userLogin({
+    email: email,
+    passwowrd: password,
+  });
+  return await login.save();
+}
+async function checkUserFromLogin(email: string) {
+  return await userLogin.find({ email });
 }
 
-async function checkUserget(name:string,password:string){
-    return await userModal.find({name,password})
+async function checkUserget(email: string, password: string) {
+  return await userModal.find({ email, password });
 }
 
-
-export  {checkUserget,storeLoginDetailsService}
+export { checkUserget, storeLoginDetailsService, checkUserFromLogin };

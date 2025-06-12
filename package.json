@@ -3,17 +3,21 @@
     "dev": "tsx --watch src/main.ts"
   },
   "dependencies": {
+    "body-parser": "^2.2.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-session": "^1.18.1",
     "mongoose": "^8.15.1",
-    "mysql2": "^3.14.1",
-    "typescript": "^5.8.3"
+    "mysql2": "^3.14.1"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.2",
-    "@types/node": "^22.15.21",
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/node": "^22.15.31",
     "prisma": "^6.9.0",
-    "tsx": "^4.19.4"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
   }
 }

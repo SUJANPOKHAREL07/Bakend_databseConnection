@@ -36,7 +36,7 @@ export const updateCategoryController=async(req:Request,res:Response)=>{
     // const{name,productId}=req.body;
     
     try{
-        const id = req.params.id;
+        const id =Number( req.params.id);
        const {name}=req.body
      const updateCategory=await updateCategoryService({id,name})
     console.log("this is updateController",updateCategory)
