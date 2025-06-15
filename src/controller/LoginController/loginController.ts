@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import crypto from "crypto"; // to generate session ID
 import {
@@ -21,17 +20,23 @@ export const createLogin = async (req: Request, res: Response) => {
     if (getLogindetails && getLogindetails.length > 0) {
       const checkExistingMail = await checkUserFromLogin(email);
 
-    
       const userID = await getusersByEmailService(email);
       if (!userID) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      
       const sessionID = crypto.randomUUID();
 
-  
       const session = await createSession(sessionID, userID.toString());
+      const EXPIRY_TIME_IN_SECONDS = 500;
+      res.cookie("authorization", {
+        path: "/",
+        httpOnly: true,
+        expires: new Date(Date.now() + EXPIRY_TIME_IN_SECONDS * 1000),
+        sameSite: "lax",
+        secure: process.env["ENVIRONMENT"] === "prod",
+      });
+      res.json("Cookies"); 
 
       if (checkExistingMail.length === 0) {
         const saveLogindata = await storeLoginDetailsService(email, password);
