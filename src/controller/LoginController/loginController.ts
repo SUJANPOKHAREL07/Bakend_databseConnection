@@ -22,39 +22,45 @@ export const createLogin = async (req: Request, res: Response) => {
 
       const userID = await getusersByEmailService(email);
       if (!userID) {
-        return res.status(404).json({ message: "User not found" });
+         res.status(404).json({ message: "User not found" });
+         return
       }
 
-      const sessionID = crypto.randomUUID();
+     
+
+      if (checkExistingMail.length === 0) {
+         const sessionID = crypto.randomUUID();
 
       const session = await createSession(sessionID, userID.toString());
       const EXPIRY_TIME_IN_SECONDS = 500;
-      res.cookie("authorization", {
+      res.cookie("authorization", sessionID, {
         path: "/",
         httpOnly: true,
         expires: new Date(Date.now() + EXPIRY_TIME_IN_SECONDS * 1000),
         sameSite: "lax",
-        secure: process.env["ENVIRONMENT"] === "prod",
+        // secure: process.env["ENVIRONMENT"] === "prod",
+        secure:true
       });
-      res.json("Cookies"); 
-
-      if (checkExistingMail.length === 0) {
+      // res.json("Cookies"); 
         const saveLogindata = await storeLoginDetailsService(email, password);
-        return res.status(200).json({
+         res.status(200).json({
           message: "New user login stored",
           session,
-        });
+        });return
       } else {
-        return res.status(200).json({
-          message: "Welcome back",
-          session,
-        });
+        //  res.status(200).json({
+        //   message: "Old User Logged in",
+        //   session,
+        // });return
+        res.status(401).json({ message: "Cannot login again" });
       }
     } else {
-      return res.status(401).json({ message: "Invalid credentials" });
+       res.status(401).json({ message: "Invalid credentials" });
+       return
     }
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Unable to login" });
+    res.status(500).json({ message: "Unable to login" });
+    return
   }
 };
