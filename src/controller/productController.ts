@@ -1,8 +1,8 @@
 // controller code
 
 import { Request,Response } from "express";
-import { productModal } from "../modal/productModal";
-import { sqlProductModal } from "../sql-models/productSQLmodal";
+// import { productModal } from "../modal/productModal";
+// import { sqlProductModal } from "../sql-models/productSQLmodal";
 import { error } from "console";
 import {  creatProductsService, deleteProductService, getAllProductsService, getProdcutsByIDService, updateProductService } from "../MongoDBModule/productModal/productService";
 

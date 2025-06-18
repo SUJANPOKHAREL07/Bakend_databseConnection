@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { sqlOrderModal } from "../sql-models/orderSQLmodals";
-import { sqlProductModal } from "../sql-models/productSQLmodal";
-import { sqlUserModal } from "../sql-models/userSQLmodal";
+// import { sqlProductModal } from "../sql-models/productSQLmodal";
+// import { sqlUserModal } from "../sql-models/userSQLmodal";
 import { createOrderService, getAllOrderService, getOrderByIdService,deleteOrderService, updateOrderService } from "../MongoDBModule/orderModal/orderService";
 
 function validateOrderInput(body: any) {
@@ -12,15 +12,15 @@ function validateOrderInput(body: any) {
     return "productIds must be a non-empty array";
   }
   // Check if user exists
-  if (!sqlUserModal.getUserBYId(body.userId)) {
-    return "User does not exist";
-  }
+  // if (!sqlUserModal.getUserBYId(body.userId)) {
+  //   return "User does not exist";
+  // }
   // Check if all products exist
-  for (const pid of body.productId) {
-    if (!sqlProductModal.getById(pid)) {
-      return `Product with id ${pid} does not exist`;
-    }
-  }
+  // for (const pid of body.productId) {
+  //   if (!sqlProductModal.getById(pid)) {
+  //     return `Product with id ${pid} does not exist`;
+  //   }
+  // }
   return null;
 }
 

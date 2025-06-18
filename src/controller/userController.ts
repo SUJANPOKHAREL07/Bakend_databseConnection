@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { sqlUserModal } from "../sql-models/userSQLmodal";
+// import { sqlUserModal } from "../sql-models/userSQLmodal";
 import { CreateUserService, deleteUserService, getAllUsersService, getusersByIDService, updateUserService } from "../MongoDBModule/usersModal/userService";
 
 export const getUserController=async(req:Request,res:Response)=>{

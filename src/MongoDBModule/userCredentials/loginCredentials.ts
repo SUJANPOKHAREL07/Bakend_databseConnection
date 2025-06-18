@@ -12,8 +12,10 @@ async function checkUserFromLogin(email: string) {
   return await userLogin.find({ email });
 }
 
-async function checkUserget(email: string, password: string) {
-  return await userModal.find({ email, password });
+async function checkUserEmail(email: string) {
+  return await userModal.find({ email});
+  
 }
-
-export { checkUserget, storeLoginDetailsService, checkUserFromLogin };
+async function checkUserPassword(paswwrod: string) {
+  return await userModal.find({ paswwrod});}
+export { checkUserEmail, storeLoginDetailsService, checkUserFromLogin,checkUserPassword };

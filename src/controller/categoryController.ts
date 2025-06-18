@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { sqlCategoryModal } from "../sql-models/categorySQLmodal";
+// import { sqlCategoryModal } from "../sql-models/categorySQLmodal";
 import { createCategoryService, deleteCategoryService, getAllCategoryService, getCategoryByIdSevice, updateCategoryService } from "../MongoDBModule/category/categoryService";
 import { log } from "console";
 export const getAllCategoryController=async(req:Request,res:Response)=>{

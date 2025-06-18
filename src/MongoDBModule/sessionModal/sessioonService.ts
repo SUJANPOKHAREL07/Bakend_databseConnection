@@ -1,9 +1,9 @@
 import userModal from "../usersModal/userMongoDB";
 import sessionModal from "./sessionMoongoDB";
 
-async function createSession(SessionID: string, userID: string) {
+async function createSession(token: string, userID: string) {
   const data = new sessionModal({
-    SessionID: SessionID,
+    token: token,
     userID: userID,
     });
   return await data.save();
@@ -17,7 +17,12 @@ async function getusersByEmailService(email: string) {
   console.log("Found user for email:", email, "==>", user); // debug log
   return user?._id;
 }
+async function getToken(input: { token: string }) {
+  const token = await sessionModal.findOne({
+    token: input.token,
+  });
+  return token;
+}
 
 
-
-export { createSession, getusersByEmailService };
+export { createSession, getusersByEmailService,getToken };
