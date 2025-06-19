@@ -25,7 +25,8 @@ export async function logoutController(req: Request, res: Response) {
     }
     const deleteDataAsLogout = await logoutUserLogin(email);
     const deleteSession = await logoutUserSession(userID.toString());
-
+    res.clearCookie("authorization")
+    res.clearCookie("refresh_token")
     res.json("Logout Successfuly.....");
     }else{
         res.status(400).json("No user found ")

@@ -10,7 +10,11 @@ import {
   createSession,
   getusersByEmailService,
 } from "../../MongoDBModule/sessionModal/sessioonService";
-import { generateToken, Tokenload } from "../../tokens/jwt";
+import {
+  generateToken,
+  refreshGenerateToken,
+  Tokenload,
+} from "../../tokens/jwt";
 
 export const createLogin = async (req: Request, res: Response) => {
   try {
@@ -34,28 +38,39 @@ export const createLogin = async (req: Request, res: Response) => {
         // const sessionID = crypto.randomUUID();
 
         // console.log("this is the session",session)
-        const userPayload:Tokenload={
-          email: user[0]?.email ?? ""
-        }  
-        console.log("this is payload",userPayload)
-        
-        const token=generateToken(userPayload)
-        const session = await createSession(token, userID.toString());
-        console.log("this is token",token)
-        const EXPIRY_TIME_IN_SECONDS = 500;
+        const userPayload: Tokenload = {
+          email: user[0]?.email ?? "",
+        };
+        console.log("this is payload", userPayload);
+
+        const token = generateToken(userPayload);
+        console.log("this is token", token);
+        const EXPIRY_TIME_IN_SECONDS = 100;
         res.cookie("authorization", token, {
           path: "/",
           httpOnly: true,
           expires: new Date(Date.now() + EXPIRY_TIME_IN_SECONDS * 1000),
           sameSite: "lax",
           // secure: process.env["ENVIRONMENT"] === "prod",
-          secure: false,
+          secure: true,
         });
+
+        // Refresh token cookies
+
+        const refreshToken = refreshGenerateToken(userPayload);
+        const session = await createSession(refreshToken, userID.toString());
+        const REFRESH_EXPIRE_TOKEN = 7 * 24 * 60 * 60;
+        res.cookie("refresh_token", refreshToken, {
+          path: "/",
+          httpOnly: true,
+          expires: new Date(Date.now() + REFRESH_EXPIRE_TOKEN * 1000),
+        });
+
         // res.json("Cookies");
         const saveLogindata = await storeLoginDetailsService(email, password);
         res.status(200).json({
           message: "New user login stored",
-         token
+          token,
         });
         return;
       } else {

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "./jwt";
+import {  generateToken, verifyToken, veriRefreshToken } from "./jwt";
 import sessionModal from "../MongoDBModule/sessionModal/sessionMoongoDB";
 import { getToken } from "../MongoDBModule/sessionModal/sessioonService";
 
@@ -17,15 +17,9 @@ export async function authmMiddleware(
   try {
     console.log("entered middleware")
     const authoHeaader =
-    req.headers.authorization || req.cookies["authorization"];
+    req.headers.authorization || req.cookies["refresh_token"];
     //  `Bearer eyldjkjaghhfkna.fhjakhfja.fhaj`;
 
-
-
-    console.log("this is the cookies",req.cookies)
-    console.log("this is req.headers",req.headers)
-    console.log("this is req.headersautoho",authoHeaader)
-    console.log("this is req.headersautoho",authoHeaader.authorization)
     if (!authoHeaader) {
       res.status(401).json({
         message: "Token not found in header",
@@ -48,7 +42,7 @@ export async function authmMiddleware(
     //   });
     //   return;
     // }
-    const payload = verifyToken(token);
+    const payload = veriRefreshToken(token);
 
     const checkInTable = await getToken({ token: authoHeaader });
     if (!checkInTable) {
@@ -57,6 +51,14 @@ export async function authmMiddleware(
       });
       return;
     }
+    const newAccessToekn = generateToken({email:payload.email})
+    res.cookie("authorization",newAccessToekn,{
+      httpOnly: true,
+      sameSite:'lax',
+      secure:true,
+      expires:new Date(Date.now()+100*1000)
+    })
+
     req.user = payload;
 
     next();
